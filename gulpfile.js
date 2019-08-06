@@ -9,7 +9,7 @@ function defaultTask(cb) {
     gulp.task('sass', function () {
         return gulp.src("assets/css/app.scss")
           .pipe(sass().on('error', sass.logError))
-          .pipe(gulp.dest("app.css"));
+          .pipe(gulp.dest("."));
       });
 
     cb();
