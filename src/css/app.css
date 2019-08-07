@@ -1,0 +1,86 @@
+@custom-media --mq-medium (max-width: 800px);
+
+:root {
+    --red: #f70201;
+    --brown: #ca774a;
+    --white: #ffffff;
+    --black: #151620;
+
+    --main-spacing: 84px;
+    --gap-spacing: 30px;
+    --header-height: 80px;
+    --hero-spacing: 240px;
+}
+
+@media (--mq-medium) {
+    :root {
+        --main-spacing: 48px;
+        --gap-spacing: 20px;
+        --hero-spacing: 120px;
+    }
+}
+
+body {
+    background-color: var(--white);
+}
+
+header {
+    background-color: var(--red);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--header-height);
+    padding: 0 var(--main-spacing) 0 var(--main-spacing);
+}
+
+section.grid, section.centered {
+    margin: var(--main-spacing);
+}
+
+section.hero {
+    padding: var(--hero-spacing) var(--main-spacing) var(--hero-spacing) var(--main-spacing);
+    background-color: #eeee;
+    text-align: center;
+    color: var(--white);
+    text-shadow: #151620;
+    background-image: image-set("img/rainbow.jpg" 1x, "img/rainbow@2x.jpg" 2x);
+    background-size: cover;
+    background-position: center;
+}
+
+section.hero.menu {
+    background-image: image-set("img/green-wall.jpg" 1x, "img/green-wall@2x.jpg" 2x);
+    background-size: cover;
+    background-position: center;
+}
+
+section.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--gap-spacing);
+    align-items: center;
+}
+
+section.grid p {
+    margin: 20px 0 20px 0;
+}
+
+.button {
+    display: inline-block;
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 15px 30px 15px 30px;
+    text-decoration: none;
+}
+
+.button-filled {
+    background-color: var(--red);
+}
+
+section.centered {
+    text-align: center;
+}
+
+.centered img {
+    width: 100px;
+}

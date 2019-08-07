@@ -1,18 +1,35 @@
 'use strict';
 
 var gulp = require('gulp');
-var sass = require('gulp-sass');
+var postcss = require('gulp-postcss');
 let cleanCSS = require('gulp-clean-css');
 var browserSync = require('browser-sync').create();
 var imagemin = require('gulp-imagemin');
+var sourcemaps = require("gulp-sourcemaps");
+var ghPages = require('gulp-gh-pages');
 
-sass.compiler = require('node-sass');
+var concat = require('gulp-concat');
 
-//GULP SASS + MINIFY CSS
-gulp.task('sass', function () {
-  return gulp.src('src/css/*.scss')
-    .pipe(sass().on('error', sass.logError))
+//GULP POSTCSS + MINIFY CSS
+gulp.task('css', function () {
+  return gulp.src([
+    "src/css/reset.css",
+    "src/css/typography.css",
+    "src/css/app.css"
+  ])
+    .pipe(
+      postcss([
+        require("autoprefixer"),
+        require("postcss-preset-env")({
+          stage: 1,
+          browsers: ["IE 11", "last 2 versions"]
+        })
+      ]
+    ))
+    .pipe(concat("app.css"))
     .pipe(cleanCSS({compatibility: 'ie8'}))
+
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
     .pipe(browserSync.stream())
 });
@@ -49,11 +66,15 @@ gulp.task('watch', function () {
     }
 });
 
-  gulp.watch("src/css/*.scss", gulp.series('sass', 'html', 'fonts', 'images', 'watch'));
-  gulp.watch("src/*.html", gulp.series('sass', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
-  gulp.watch("src/fonts/*", gulp.series('sass', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
-  gulp.watch("src/img/*", gulp.series('sass', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
+  gulp.watch("src/css/*.css", gulp.series('css', 'html', 'fonts', 'images', 'watch'));
+  gulp.watch("src/*.html", gulp.series('css', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
+  gulp.watch("src/fonts/*", gulp.series('css', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
+  gulp.watch("src/img/*", gulp.series('css', 'html', 'fonts', 'images', 'watch')).on('change', browserSync.reload);
 });
 
+gulp.task('deploy', function() {
+  return gulp.src('dist/*')
+    .pipe(ghPages());
+});
 
-gulp.task('default', gulp.series('sass', 'html', 'fonts', 'images', 'watch'));
+gulp.task('default', gulp.series('css', 'html', 'fonts', 'images', 'watch'));
